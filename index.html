@@ -10,21 +10,26 @@
 
   <!-- 
       TODO:
-      - Streaks
-      - Sounds
-      - Share stats?
-      - Dark mode
-      - Different timers
+      - DONE! Sounds 
+      - DONE! Dark mode
+      - DONE! (to be tested) Streaks
+      - DONE! Different timers
       - Different words amount (not for quotes)
+      - Share stats?
       - Sudden death mode, 1 mistake and it ends.
   -->
+
   
   <div class="stats-panel container">
+    <button id="toggle-button">YEH HAW</button>
     <div class="top-bar">
       <h1 class="logo">Lifetime stats</h1>
     </div>
+    <p>Daily Streak: <span id="streak">0</span> 🔥</p>
     <p>Games Played: <span id="lifetime-games">0</span></p>
+    <p>Best WPM: <span id="best-wpm">0</span></p>
     <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
+    <p>Best Accuracy: <span id="best-accuracy">100%</span></p>
     <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
   </div>
 
@@ -35,14 +40,20 @@
     <br>
     <header>
       <div class="options">
-        <button>English</button>
-        <button>Italian</button>
-        <button>Tech</button>
-        <button>Cat</button>
-        <button>Quotes</button>
+        <button class="word-opt">English</button>
+        <button class="word-opt">Italian</button>
+        <button class="word-opt">Tech</button>
+        <button class="word-opt">Cat</button>
+        <button class="word-opt">Quotes</button>
+
+        <span>|</span>
+
+        <button class="time-opt" data-time="15">15s</button>
+        <button class="time-opt" data-time="30">30s</button>
+        <button class="time-opt" data-time="45">45s</button>
       </div>
       <div class="stats">
-        <div id="timer">35s</div>
+        <div id="timer">30s</div>
         <div id="wpm">0 WPM</div>
         <div id="accuracy">100%</div>
       </div>

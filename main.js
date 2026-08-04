@@ -114,12 +114,17 @@ const lifetimeWpm = document.getElementById('lifetime-wpm');
 const currentAccuracy = document.getElementById('accuracy');
 const resultAccuracy = document.getElementById('result-accuracy');
 const lifetimeAccuracy = document.getElementById('lifetime-accuracy');
+const bestAccuracyElem = document.getElementById('best-accuracy');
+const bestWpmElem = document.getElementById('best-wpm');
+const themeButton = document.getElementById('toggle-button');
+const streak = document.getElementById('streak');
 
 let letters = [];
 let currentIndex = 0;
 let correctCount = 0;
 let totalStrokes = 0;
-let timeLeft = 35;
+let selectedTime = 30;
+let timeLeft = selectedTime;
 let timer = null;
 let calculator = null;
 let startTime = null;
@@ -129,11 +134,192 @@ let isOver = false;
 let totalWpm = Number(localStorage.getItem('totalWpm')) || 0;
 let totalPlays = Number(localStorage.getItem('totalPlays')) || 0;
 let totalAccuracy = Number(localStorage.getItem('totalAccuracy')) || 0;
+let bestWPM = Number(localStorage.getItem('bestWPM')) || 0;
+let bestAccuracy = Number(localStorage.getItem('bestAccuracy')) || 0;
+let savedTheme = localStorage.getItem("theme");
+let currentStreak = Number(localStorage.getItem('streak')) || 0;
+let lastActive = localStorage.getItem('lastActive') || null;
+
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const theme = savedTheme || (systemDark ? 'dark' : 'light');
+applyTheme(theme);
 
 let words = englishWords;
 
+options.addEventListener("click", (e) => {
+  
+  if (e.target.classList.contains('word-opt')) {
+    let button = e.target.innerText;
+    if (button == "Quotes") {
+      words = quotes;
+    } else {
+      words = eval(button.toLowerCase() + "Words");
+    }
+    
+    reset();
+  }
+
+  if (e.target.classList.contains('time-opt')) {
+    const time = parseInt(e.target.getAttribute('data-time'), 10);
+    if (!isNaN(time)) {
+      selectedTime = time;
+      reset();
+    }
+  }
+  
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key == "Tab") {
+    e.preventDefault();
+    reset();
+  }
+  
+  if (e.key == 'Enter') {
+    e.preventDefault();
+  }
+})
+
+document.addEventListener("keydown", (e) => {
+  
+  const typeAudio = new Audio("sound/type_03.mp3");
+  typeAudio.preload = "auto";
+  
+  const soundInstance = typeAudio.cloneNode();
+  soundInstance.play().catch(err => console.log("Audio play blocked:", err));
+  
+  if ((e.key.length > 1 && e.key !== "Backspace") || isOver) return;
+  
+  if (e.key == " " || e.key == "'" || e.key == '/') {
+    e.preventDefault();
+  }
+  
+  
+  
+  if (!hasStarted) {
+    start();
+    hasStarted = true;
+    startTime = Date.now();
+  }
+  
+  const currentLetter = letters[currentIndex];
+  if (e.key == "Backspace") {
+    if (currentIndex > 0) {
+      if (letters[currentIndex]) {
+        currentLetter.classList.remove("active", "correct", "incorrect");
+      }
+      currentIndex--;
+      letters[currentIndex].classList.add("active");
+      letters[currentIndex].classList.remove("correct", "incorrect");
+    }
+    return;
+  }
+  
+  if (currentIndex < letters.length) {
+    totalStrokes++;
+    
+    if (e.key == currentLetter.innerText) {
+      currentLetter.classList.add("correct");
+      correctCount++;
+    } else {
+      currentLetter.classList.add("incorrect");
+    }
+    
+    const accuracy = Math.round((correctCount / totalStrokes) * 100);
+    currentAccuracy.innerText = accuracy + "%";
+    
+    currentLetter.classList.remove("active");
+    currentIndex++;
+    
+    if (currentIndex < letters.length) {
+      letters[currentIndex].classList.add("active");
+    } else if (letters[currentIndex - 1].classList.contains("correct")) {
+      endGame();
+    }
+    
+    const progress = (currentIndex / letters.length) * 80;
+    catSprite.style.left = `${Math.min(progress, 80)}%`;
+  } 
+});
+
+
+themeButton.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  let newTheme;
+  if (currentTheme == 'dark') {
+    newTheme = 'light';
+  } else {
+    newTheme = 'dark';
+  }
+
+  applyTheme(newTheme);
+  localStorage.setItem("theme", newTheme);
+});
+
+
+window.matchMedia('(prefers-color-scheme: dark').addEventListener('change', (e) => {
+  if (!localStorage.getItem("theme")) {
+    applyTheme(e.matches ? 'dark' : 'light');
+  }
+});
+
+function getDate(date) {
+  return date.toISOString().split("T")[0];
+}
+
+function getDaysPassed(lastActive, today) {
+    const diffTime = new Date(today) - new Date(lastActive);
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+}
+
+function checkStreak() {
+  if (lastActive) {
+    const today = getDate(new Date());
+    const daysPassed = getDaysPassed(lastActive, today);
+
+    if (daysPassed > 1) {
+      currentStreak = 0;
+      localStorage.setItem('streak', 0);
+    }
+  }
+}
+
+function updateStreak() {
+  const today = getDate(new Date());
+
+  if (!lastActive) {
+    currentStreak = 1;
+  } else {
+    const daysPassed = getDaysPassed(lastActive, today);
+
+    if (daysPassed == 1) {
+      currentStreak++;
+    } else if (daysPassed > 1) {
+      currentStreak = 1;
+    }
+  }
+
+  lastActive = today;
+  localStorage.setItem('streak', currentStreak);
+  localStorage.setItem('lastActive', lastActive);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+
+  if (theme == 'dark') {
+    themeButton.innerText = "☀️";
+  } else {
+    themeButton.innerText = "🌙";
+  }
+}
+
 function updateStats() {
   if (lifetimeGames && lifetimeWpm) {
+    checkStreak();
+
+    streak.innerText = currentStreak;
+
     lifetimeGames.innerText = totalPlays;
     
     let avgWpm = 0;
@@ -144,7 +330,9 @@ function updateStats() {
     }
 
     lifetimeWpm.innerText = avgWpm + " WPM";
+    bestWpmElem.innerText = bestWPM + " WPM";
     lifetimeAccuracy.innerText = avgAccuracy + "%";
+    bestAccuracyElem.innerText = bestAccuracy + "%";
 
   } 
 }
@@ -153,26 +341,65 @@ function saveStats(wpm, accuracy) {
   totalWpm += wpm;
   totalAccuracy += accuracy;
   totalPlays++;
+
+  if (wpm > bestWPM) {
+    bestWPM = wpm;
+  }
+
+  if (accuracy > bestAccuracy) {
+    bestAccuracy = accuracy;
+  }
   
   localStorage.setItem("totalAccuracy", totalAccuracy);
   localStorage.setItem("totalWpm", totalWpm);
   localStorage.setItem("totalPlays", totalPlays);
+  localStorage.setItem("bestWPM", bestWPM);
+  localStorage.setItem("bestAccuracy", bestAccuracy);
   
   updateStats();
 }
 
-options.addEventListener("click", (e) => {
+function start() {
+  timer = setInterval(() => {
+    timeLeft--;
+    timerDisplay.innerText = timeLeft + "s";
+    
+    if (timeLeft <= 0 || isOver) {
+      clearInterval(timer);
+      endGame();
+    }
+  }, 1000);
   
-  let button = e.target.innerText;
-  if (button == "Quotes") {
-    words = quotes;
-  } else {
-    words = eval(button.toLowerCase() + "Words");
+  calculator = setInterval(calculateWPM, 200);
+}
+
+function calculateWPM() {
+  const elapsedSeconds = (Date.now() - startTime) / 1000;
+  const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
+  currentWpm.innerText = wpm + " WPM";
+  
+  if (timeLeft <= 0 || isOver) {
+    clearInterval(calculator);
+    return;
   }
+}
+
+function endGame() {
+  if (isOver) return;
   
-  reset();
+  const elapsedSeconds = (Date.now() - startTime) / 1000;
+  const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
+  const accuracy = Math.round((correctCount / totalStrokes) * 100);
   
-});
+  resultWpm.innerText = wpm;
+  resultAccuracy.innerText = accuracy;
+  
+  results.classList.remove("hidden");
+  isOver = true;
+  
+  updateStreak();
+  saveStats(wpm, accuracy);
+}
 
 function reset() {
   clearInterval(timer);
@@ -184,12 +411,12 @@ function reset() {
   currentIndex = 0;
   correctCount = 0;
   totalStrokes = 0;
-  timeLeft = 35;
-  timerDisplay.innerText = "35s";
+  timeLeft = selectedTime;
+  timerDisplay.innerText = selectedTime + "s";
   currentWpm.innerHTML = "0 WPM";
   currentAccuracy.innerText = "100%"
   catSprite.style.left = "10px";
-  
+
   results.classList.add("hidden");
   
   render();
@@ -224,114 +451,6 @@ function render() {
   });
   
   letters = document.querySelectorAll(`.letter`);
-}
-
-window.addEventListener("keydown", (e) => {
-  if (e.key == "Tab") {
-    e.preventDefault();
-    reset();
-  }
-  
-  if (e.key == 'Enter') {
-    e.preventDefault();
-  }
-})
-
-document.addEventListener("keydown", (e) => {
-  if ((e.key.length > 1 && e.key !== "Backspace") || isOver) return;
-  
-  if (e.key == " " || e.key == "'" || e.key == '/') {
-    e.preventDefault();
-  }
-  
-  
-  
-  if (!hasStarted) {
-    start();
-    hasStarted = true;
-    startTime = Date.now();
-  }
-  
-  const currentLetter = letters[currentIndex];
-  if (e.key == "Backspace") {
-    if (currentIndex > 0) {
-      if (letters[currentIndex]) {
-        currentLetter.classList.remove("active", "correct", "incorrect");
-      }
-      currentIndex--;
-      letters[currentIndex].classList.add("active");
-      letters[currentIndex].classList.remove("correct", "incorrect");
-    }
-    return;
-  }
-  
-  if (currentIndex < letters.length) {
-    totalStrokes++;
-
-    if (e.key == currentLetter.innerText) {
-      currentLetter.classList.add("correct");
-      correctCount++;
-    } else {
-      currentLetter.classList.add("incorrect");
-    }
-    
-    const accuracy = Math.round((correctCount / totalStrokes) * 100);
-    currentAccuracy.innerText = accuracy + "%";
-
-    currentLetter.classList.remove("active");
-    currentIndex++;
-    
-    if (currentIndex < letters.length) {
-      letters[currentIndex].classList.add("active");
-    } else if (letters[currentIndex - 1].classList.contains("correct")) {
-      endGame();
-    }
-    
-    const progress = (currentIndex / letters.length) * 80;
-    catSprite.style.left = `${Math.min(progress, 80)}%`;
-  } 
-});
-
-function start() {
-  timer = setInterval(() => {
-    timeLeft--;
-    timerDisplay.innerText = timeLeft + "s";
-    
-    if (timeLeft <= 0 || isOver) {
-      clearInterval(timer);
-      endGame();
-    }
-  }, 1000);
-  
-  calculator = setInterval(calculateWPM, 200);
-}
-
-
-function calculateWPM() {
-  const elapsedSeconds = (Date.now() - startTime) / 1000;
-  const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
-  currentWpm.innerText = wpm + " WPM";
-  
-  if (timeLeft <= 0 || isOver) {
-    clearInterval(calculator);
-    return;
-  }
-}
-
-function endGame() {
-  if (isOver) return;
-  
-  const elapsedSeconds = (Date.now() - startTime) / 1000;
-  const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
-  const accuracy = Math.round((correctCount / totalStrokes) * 100);
-
-  resultWpm.innerText = wpm;
-  resultAccuracy.innerText = accuracy;
-
-  results.classList.remove("hidden");
-  isOver = true;
-  
-  saveStats(wpm, accuracy);
 }
 
 updateStats();
