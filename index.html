@@ -7,6 +7,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- 
+      TODO:
+      - Streaks
+      - Sounds
+      - Share stats?
+      - Dark mode
+      - Different timers
+      - Different words amount (not for quotes)
+      - Sudden death mode, 1 mistake and it ends.
+  -->
   
   <div class="stats-panel container">
     <div class="top-bar">
@@ -14,6 +25,7 @@
     </div>
     <p>Games Played: <span id="lifetime-games">0</span></p>
     <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
+    <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
   </div>
 
   <div class="container">
@@ -32,6 +44,7 @@
       <div class="stats">
         <div id="timer">35s</div>
         <div id="wpm">0 WPM</div>
+        <div id="accuracy">100%</div>
       </div>
     </header>
 
@@ -46,6 +59,7 @@
     <div id="results" class="hidden">
       <h2> Well Done! </h2>
       <p>Speed: <span id="result-wpm">0</span> WPM</p>
+      <p>Accuracy <span id="result-accuracy">100</span>%</p>
       <button onclick="reset()">Restart</button>
     </div>
   </div>

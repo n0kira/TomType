@@ -111,10 +111,14 @@ const currentWpm = document.getElementById('wpm');
 const options = document.querySelector(`.options`);
 const lifetimeGames = document.getElementById('lifetime-games');
 const lifetimeWpm = document.getElementById('lifetime-wpm');
+const currentAccuracy = document.getElementById('accuracy');
+const resultAccuracy = document.getElementById('result-accuracy');
+const lifetimeAccuracy = document.getElementById('lifetime-accuracy');
 
 let letters = [];
 let currentIndex = 0;
 let correctCount = 0;
+let totalStrokes = 0;
 let timeLeft = 35;
 let timer = null;
 let calculator = null;
@@ -124,26 +128,33 @@ let isOver = false;
 
 let totalWpm = Number(localStorage.getItem('totalWpm')) || 0;
 let totalPlays = Number(localStorage.getItem('totalPlays')) || 0;
+let totalAccuracy = Number(localStorage.getItem('totalAccuracy')) || 0;
 
 let words = englishWords;
-
 
 function updateStats() {
   if (lifetimeGames && lifetimeWpm) {
     lifetimeGames.innerText = totalPlays;
-    let avg = 0;
+    
+    let avgWpm = 0;
+    let avgAccuracy = 100;
     if (totalPlays > 0) {
-      avg = Math.round(totalWpm / totalPlays)
+      avgWpm = Math.round(totalWpm / totalPlays)
+      avgAccuracy = Math.round(totalAccuracy / totalPlays);
     }
-    lifetimeWpm.innerText = avg + " WPM";
-    console.log(avg)
+
+    lifetimeWpm.innerText = avgWpm + " WPM";
+    lifetimeAccuracy.innerText = avgAccuracy + "%";
+
   } 
 }
 
-function saveStats(wpm) {
+function saveStats(wpm, accuracy) {
   totalWpm += wpm;
+  totalAccuracy += accuracy;
   totalPlays++;
   
+  localStorage.setItem("totalAccuracy", totalAccuracy);
   localStorage.setItem("totalWpm", totalWpm);
   localStorage.setItem("totalPlays", totalPlays);
   
@@ -172,9 +183,11 @@ function reset() {
   isOver = false;
   currentIndex = 0;
   correctCount = 0;
+  totalStrokes = 0;
   timeLeft = 35;
   timerDisplay.innerText = "35s";
   currentWpm.innerHTML = "0 WPM";
+  currentAccuracy.innerText = "100%"
   catSprite.style.left = "10px";
   
   results.classList.add("hidden");
@@ -253,7 +266,8 @@ document.addEventListener("keydown", (e) => {
   }
   
   if (currentIndex < letters.length) {
-    
+    totalStrokes++;
+
     if (e.key == currentLetter.innerText) {
       currentLetter.classList.add("correct");
       correctCount++;
@@ -261,6 +275,9 @@ document.addEventListener("keydown", (e) => {
       currentLetter.classList.add("incorrect");
     }
     
+    const accuracy = Math.round((correctCount / totalStrokes) * 100);
+    currentAccuracy.innerText = accuracy + "%";
+
     currentLetter.classList.remove("active");
     currentIndex++;
     
@@ -306,11 +323,15 @@ function endGame() {
   
   const elapsedSeconds = (Date.now() - startTime) / 1000;
   const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
+  const accuracy = Math.round((correctCount / totalStrokes) * 100);
+
   resultWpm.innerText = wpm;
+  resultAccuracy.innerText = accuracy;
+
   results.classList.remove("hidden");
   isOver = true;
   
-  saveStats(wpm);
+  saveStats(wpm, accuracy);
 }
 
 updateStats();

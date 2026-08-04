@@ -8,13 +8,12 @@ This was made just to improve my javascript skills and for the Stardance Challen
 This project was built using HTML, CSS and JavaScript, nothing else.
 [Try it here!]()
 
----
 
 ## To run locally:
 
 1. Clone the repo:
 ```bash
-git clone https://github.com/n0kira/TomType.git
+git clone n0kira.github.io/TomType/
 ```
 
 2. Open index.html
