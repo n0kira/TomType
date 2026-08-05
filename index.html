@@ -7,35 +7,37 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- 
-      TODO:
-      - DONE! Sounds 
-      - DONE! Dark mode
-      - DONE! (to be tested) Streaks
-      - DONE! Different timers
-      - DONE! Different words amount (not for quotes)
-      - DONE! (kinda) Sudden death mode, 1 mistake and it ends.
-      - Share stats?
-  -->
-
   
-  <div class="stats-panel container">
-    <button id="toggle-button">YEH HAW</button>
-    <div class="top-bar">
-      <h1 class="logo">Lifetime stats</h1>
+  <!-- 
+    TODO:
+    - DONE! Sounds 
+    - DONE! Dark mode
+    - DONE! (to be tested) Streaks
+    - DONE! Different timers
+    - DONE! Different words amount (not for quotes)
+    - DONE! (kinda) Sudden death mode, 1 mistake and it ends.
+    - DONE! Share stats?
+    -->
+    
+    <div class="stats-wrapper">
+      <div class="stats-panel container">
+        <button id="toggle-button" title="Change theme">☀️</button>
+        <button id="share-button" title="Share"><img src="img/share.png" alt="🌐" height="15px"></button>
+        <div class="top-bar">
+          <h1 class="logo">Lifetime stats</h1>
+        </div>
+        <p>Daily Streak: <span id="streak">0</span>🔥</p>
+        <p>Games Played: <span id="lifetime-games">0</span></p>
+        <p>Best WPM: <span id="best-wpm">0</span></p>
+        <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
+        <p>Best Accuracy: <span id="best-accuracy">100%</span></p>
+        <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
+      </div>
     </div>
-    <p>Daily Streak: <span id="streak">0</span>🔥</p>
-    <p>Games Played: <span id="lifetime-games">0</span></p>
-    <p>Best WPM: <span id="best-wpm">0</span></p>
-    <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
-    <p>Best Accuracy: <span id="best-accuracy">100%</span></p>
-    <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
-  </div>
-
-  <div class="container">
-    <div class="top-bar">
-      <h1 class="logo">TomType</h1>
+    
+    <div class="container">
+      <div class="top-bar">
+        <h1 class="logo">TomType</h1>
     </div>
     <br>
     <header>
@@ -50,23 +52,23 @@
           </div>
           
           <span>|</span>
-        
+          
           <div>
             <button class="mode-opt active-btn">Normal</button>
             <button class="mode-opt">Hardcore</button>
           </div>
         </div>
-
-
+        
+        
         <div class="options-container"> 
           <div>
             <button class="time-opt" data-time="15">15s</button>
             <button class="time-opt active-btn" data-time="30">30s</button>
             <button class="time-opt" data-time="45">45s</button>
           </div>
-
+          
           <span>|</span>
-
+          
           <div>
             <button class="amount-opt" data-amount="10">10 words</button>
             <button class="amount-opt active-btn" data-amount="25">25 words</button>
@@ -80,7 +82,7 @@
         <div id="accuracy">100%</div>
       </div>
     </header>
-
+    
     
     <div id="words-box"></div>
     
@@ -88,7 +90,7 @@
       <div id="cat-sprite"><img src="img/cat.png" alt=""></div>
       <div id="fish-sprite"><img src="img/mouse.png" alt=""></div>
     </div>
-
+    
     <div id="results" class="hidden">
       <h2> Well Done! </h2>
       <p>Speed: <span id="result-wpm">0</span> WPM</p>
@@ -96,12 +98,14 @@
       <button onclick="reset()">Restart</button>
     </div>
   </div>
-
-
+  
+  
   <div class="commands">
     <h5>Click "Tab" to restart</h5>
   </div>
-
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

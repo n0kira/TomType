@@ -118,6 +118,8 @@ const bestAccuracyElem = document.getElementById('best-accuracy');
 const bestWpmElem = document.getElementById('best-wpm');
 const themeButton = document.getElementById('toggle-button');
 const streak = document.getElementById('streak');
+const shareButton = document.getElementById('share-button');
+const statsPanel = document.querySelector('.stats-panel');
 
 let letters = [];
 let currentIndex = 0;
@@ -147,6 +149,39 @@ const theme = savedTheme || (systemDark ? 'dark' : 'light');
 applyTheme(theme);
 
 let words = englishWords;
+
+
+const typeAudio = new Audio("sound/type_03.mp3");
+const uiAudio = new Audio("sound/tap_03.mp3");
+
+typeAudio.preload = "auto";
+uiAudio.preload = "autio";
+
+document.querySelectorAll(`button`).forEach((btn) => {
+  btn.addEventListener("click", () => {
+      const soundInstance = uiAudio.cloneNode();
+      soundInstance.play().catch(err => console.log("Audio play blocked:", err));
+  });
+});
+
+shareButton.addEventListener("click", (e) => {
+  htmlToImage
+    .toBlob(statsPanel, {
+      width: statsPanel.offsetWidth,
+      height: statsPanel.offsetHeight,
+      scrollX: 0,
+      scrollY: 0,
+      pixelRatio: 2,
+      backgroundColor: null
+    })
+    .then(function (blob) {
+      if (window.saveAs) {
+        window.saveAs(blob, 'TomType-Stats.png'); 
+      } else {
+        FileSaver.saveAs(blob, 'TomType-Stats.png');
+      }
+    });
+});
 
 options.addEventListener("click", (e) => {
   
@@ -203,8 +238,6 @@ window.addEventListener("keydown", (e) => {
 
 document.addEventListener("keydown", (e) => {
   
-  const typeAudio = new Audio("sound/type_03.mp3");
-  typeAudio.preload = "auto";
   
   const soundInstance = typeAudio.cloneNode();
   soundInstance.play().catch(err => console.log("Audio play blocked:", err));
