@@ -156,6 +156,19 @@ button {
   text-align: center;
 }
 
+.options-container {
+  display: flex;
+  align-items: center;
+}
+
+.options-container span {
+  margin-top: 15px;
+}
+
+.active-btn {
+  border: #241c15 3px solid;
+}
+
 #cat-sprite {
   font-size: 1.8rem;
   position: absolute;

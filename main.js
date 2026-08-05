@@ -151,17 +151,18 @@ let words = englishWords;
 options.addEventListener("click", (e) => {
   
   if (e.target.classList.contains('word-opt')) {
+    setActiveButton(e.target);
     const button = e.target.innerText;
     if (button == "Quotes") {
       words = quotes;
     } else {
       words = eval(button.toLowerCase() + "Words");
     }
-    
     reset();
   }
 
   if (e.target.classList.contains('time-opt')) {
+    setActiveButton(e.target);
     const time = parseInt(e.target.getAttribute('data-time'), 10);
     if (!isNaN(time)) {
       selectedTime = time;
@@ -170,6 +171,7 @@ options.addEventListener("click", (e) => {
   }
 
   if (e.target.classList.contains('amount-opt')) {
+    setActiveButton(e.target);
     const amount = parseInt(e.target.getAttribute('data-amount'), 10);
     if (!isNaN(amount)) {
       selectedAmount = amount;
@@ -178,6 +180,7 @@ options.addEventListener("click", (e) => {
   }
 
   if (e.target.classList.contains('mode-opt')) {
+    setActiveButton(e.target);
     const mode = e.target.innerText.toLowerCase();
     if (mode) {
       selectedMode = mode;
@@ -282,6 +285,14 @@ window.matchMedia('(prefers-color-scheme: dark').addEventListener('change', (e) 
     applyTheme(e.matches ? 'dark' : 'light');
   }
 });
+
+function setActiveButton(button) {
+  const buttons = button.parentElement.querySelectorAll('button');
+  buttons.forEach(btn => {
+    btn.classList.remove('active-btn');
+  });
+  button.classList.add('active-btn');
+}
 
 function getDate(date) {
   const year = date.getFullYear();
