@@ -69,7 +69,7 @@ header {
 
 button {
   margin-top: 15px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   background-color: var(--bg-button);
   border: none;
   border-radius: 6px;
@@ -147,6 +147,13 @@ button {
 .top-bar {
   text-align: center;
   margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 #cat-sprite {

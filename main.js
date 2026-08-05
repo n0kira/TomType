@@ -1,6 +1,6 @@
 const englishWords = [
   "apple", "river", "mountain", "shadow", "whisper", "garden", "cloud", "ocean",
-  "breeze", "forest", "window", "blanket", "lantern", "journey", "silence", "echo",
+  "breeze", "forest", "window", "blanket", "lantern", "silence", "echo",
   "mirror", "castle", "desert", "feather", "harbor", "thunder", "spark", "meadow",
   "riddle", "statue", "valley", "compass", "horizon", "velvet", "shelter", "winter",
   "summer", "autumn", "spring", "planet", "galaxy", "starlight", "timber", "canyon",
@@ -11,8 +11,8 @@ const englishWords = [
   "melody", "harmony", "canvas", "sketch", "legend", "beacon", "voyage", "summit",
   "glacier", "tide", "wave", "current", "boulder", "cliff", "cavern", "tunnel",
   "highway", "pathway", "sidewalk", "balcony", "chimney", "doorway", "kitchen", "attic",
-  "cellar", "hallway", "cabinet", "pillow", "curtain", "flame", "candle", "beacon",
-  "voyage", "pioneer", "scholar", "painter", "writer", "runner", "sailor", "scout"
+  "cellar", "hallway", "cabinet", "pillow", "curtain", "flame", "candle", "pioneer", 
+  "scholar", "painter", "writer", "runner", "sailor", "scout"
 ];
 
 const catWords = [
@@ -42,7 +42,7 @@ const techWords = [
   "class", "object", "interface", "function", "method", "variable", "constant",
   "array", "string", "boolean", "integer", "float", "pointer", "buffer", "stream",
   "promise", "async", "await", "loop", "recursion", "syntax", "compiler", "runtime",
-  "package", "module", "library", "framework", "inherit", "instance", "method",
+  "package", "module", "library", "framework", "inherit", "instance",
   "algorithm", "database", "query", "index", "schema", "server", "client", "request",
   "response", "endpoint", "router", "session", "cookie", "token", "auth", "cache",
   "memory", "thread", "process", "kernel", "binary", "system", "network", "socket",
@@ -58,15 +58,15 @@ const italianWords = [
   "amico", "famiglia", "casa", "strada", "piazza", "terra", "fuoco", "acqua",
   "luce", "ombra", "vento", "fiume", "isola", "monte", "bosco", "fiore",
   "albero", "stella", "luna", "cielo", "musica", "arte", "storia", "libro",
-  "penna", "parola", "voce", "suono", "sogno", "viaggio", "strada", "città",
-  "paese", "stazione", "treno", "volo", "strada", "lavoro", "studio", "scuola",
+  "penna", "parola", "voce", "suono", "sogno", "viaggio", "città",
+  "paese", "stazione", "treno", "volo", "lavoro", "studio", "scuola",
   "mente", "pensiero", "forza", "coraggio", "pace", "gioia", "sorriso", "sguardo",
   "mano", "testa", "occhio", "bocca", "porta", "finestra", "tavolo", "sedia",
   "piatto", "pane", "vino", "formaggio", "sapore", "dolce", "caldo", "freddo",
   "nuovo", "vecchio", "grande", "piccolo", "veloce", "lento", "chiaro", "scuro",
   "primo", "ultimo", "sempre", "mai", "adesso", "domani", "ieri", "insieme",
   "subito", "vicino", "lontano", "aperto", "chiuso", "pronto", "giusto", "vero",
-  "forte", "debole", "ricco", "povero", "felice", "triste", "primo", "secolo"
+  "forte", "debole", "ricco", "povero", "felice", "triste", "secolo"
 ];
 
 const quotes = [
@@ -124,12 +124,14 @@ let currentIndex = 0;
 let correctCount = 0;
 let totalStrokes = 0;
 let selectedTime = 30;
+let selectedAmount = 25;
 let timeLeft = selectedTime;
 let timer = null;
 let calculator = null;
 let startTime = null;
 let hasStarted = false;
 let isOver = false;
+let selectedMode = "normal";
 
 let totalWpm = Number(localStorage.getItem('totalWpm')) || 0;
 let totalPlays = Number(localStorage.getItem('totalPlays')) || 0;
@@ -149,7 +151,7 @@ let words = englishWords;
 options.addEventListener("click", (e) => {
   
   if (e.target.classList.contains('word-opt')) {
-    let button = e.target.innerText;
+    const button = e.target.innerText;
     if (button == "Quotes") {
       words = quotes;
     } else {
@@ -163,6 +165,22 @@ options.addEventListener("click", (e) => {
     const time = parseInt(e.target.getAttribute('data-time'), 10);
     if (!isNaN(time)) {
       selectedTime = time;
+      reset();
+    }
+  }
+
+  if (e.target.classList.contains('amount-opt')) {
+    const amount = parseInt(e.target.getAttribute('data-amount'), 10);
+    if (!isNaN(amount)) {
+      selectedAmount = amount;
+      reset();
+    }
+  }
+
+  if (e.target.classList.contains('mode-opt')) {
+    const mode = e.target.innerText.toLowerCase();
+    if (mode) {
+      selectedMode = mode;
       reset();
     }
   }
@@ -221,8 +239,10 @@ document.addEventListener("keydown", (e) => {
     if (e.key == currentLetter.innerText) {
       currentLetter.classList.add("correct");
       correctCount++;
-    } else {
+    } else if (selectedMode == "normal") {
       currentLetter.classList.add("incorrect");
+    } else {
+      endGame();
     }
     
     const accuracy = Math.round((correctCount / totalStrokes) * 100);
@@ -264,16 +284,26 @@ window.matchMedia('(prefers-color-scheme: dark').addEventListener('change', (e) 
 });
 
 function getDate(date) {
-  return date.toISOString().split("T")[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function getDaysPassed(lastActive, today) {
-    const diffTime = new Date(today) - new Date(lastActive);
-    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const [y1, m1, d1] = lastActive.split('-').map(Number);
+  const [y2, m2, d2] = today.split('-').map(Number);
+
+  const lastActiveDate = new Date(y1, m1-1, d1);
+  const todayDate = new Date(y2, m2-1, d2);
+  
+  const diffTime = todayDate - lastActiveDate;
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 }
 
 function checkStreak() {
   if (lastActive) {
+    console.log("checking streak");
     const today = getDate(new Date());
     const daysPassed = getDaysPassed(lastActive, today);
 
@@ -285,17 +315,21 @@ function checkStreak() {
 }
 
 function updateStreak() {
+  console.log("updating streak");
   const today = getDate(new Date());
 
   if (!lastActive) {
     currentStreak = 1;
+    console.log("boop");
   } else {
     const daysPassed = getDaysPassed(lastActive, today);
 
     if (daysPassed == 1) {
       currentStreak++;
+      console.log("updated");
     } else if (daysPassed > 1) {
       currentStreak = 1;
+      console.log("reset");
     }
   }
 
@@ -432,7 +466,7 @@ function render() {
     const quoteString = quotes[selectedQuote];
     selectedWords = quoteString.split(" ");
   } else {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < selectedAmount; i++) {
       const index = Math.floor(Math.random() * words.length);
       selectedWords.push(words[index]);
     }

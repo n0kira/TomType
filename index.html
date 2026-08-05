@@ -14,9 +14,9 @@
       - DONE! Dark mode
       - DONE! (to be tested) Streaks
       - DONE! Different timers
-      - Different words amount (not for quotes)
+      - DONE! Different words amount (not for quotes)
+      - DONE! (kinda) Sudden death mode, 1 mistake and it ends.
       - Share stats?
-      - Sudden death mode, 1 mistake and it ends.
   -->
 
   
@@ -25,7 +25,7 @@
     <div class="top-bar">
       <h1 class="logo">Lifetime stats</h1>
     </div>
-    <p>Daily Streak: <span id="streak">0</span> 🔥</p>
+    <p>Daily Streak: <span id="streak">0</span>🔥</p>
     <p>Games Played: <span id="lifetime-games">0</span></p>
     <p>Best WPM: <span id="best-wpm">0</span></p>
     <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
@@ -40,17 +40,31 @@
     <br>
     <header>
       <div class="options">
-        <button class="word-opt">English</button>
-        <button class="word-opt">Italian</button>
-        <button class="word-opt">Tech</button>
-        <button class="word-opt">Cat</button>
-        <button class="word-opt">Quotes</button>
+        <div>
+          <button class="word-opt active">English</button>
+          <button class="word-opt">Italian</button>
+          <button class="word-opt">Tech</button>
+          <button class="word-opt">Cat</button>
+          <button class="word-opt">Quotes</button>
+          
+          <span>|</span>
+        
+          <button class="mode-opt active">Normal</button>
+          <button class="mode-opt">Hardcore</button>
+        </div>
 
-        <span>|</span>
 
-        <button class="time-opt" data-time="15">15s</button>
-        <button class="time-opt" data-time="30">30s</button>
-        <button class="time-opt" data-time="45">45s</button>
+        <div> 
+          <button class="time-opt" data-time="15">15s</button>
+          <button class="time-opt active" data-time="30">30s</button>
+          <button class="time-opt" data-time="45">45s</button>
+
+          <span>|</span>
+
+          <button class="amount-opt" data-amount="10">10 words</button>
+          <button class="amount-opt active" data-amount="25">25 words</button>
+          <button class="amount-opt" data-amount="50">50 words</button>
+        </div>
       </div>
       <div class="stats">
         <div id="timer">30s</div>
