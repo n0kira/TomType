@@ -3,7 +3,7 @@
 This it TomType, a simple typing game inspired by MonkeyType. 
 This was made just to improve my javascript skills and for the Stardance Challenge.
 
-![Preview](img/preview.gif)
+![Preview](img/preview.mp4)
 
 This project was built using HTML, CSS and JavaScript, nothing else.
 [Try it here!]()
