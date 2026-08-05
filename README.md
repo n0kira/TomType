@@ -15,8 +15,8 @@ Try the game [here](https://n0kira.github.io/TomType/)!
   - 🐱 Cat-themed Vocabulary
   - 📜 Quotes
 - **Game Modes:**
-  - **Normal:** Type at your own pace; errors are highlighted in red.
-  - **Hardcore:** Sudden death mode—1 mistake and the test ends immediately.
+  - **Normal:** errors are highlighted in red and you can keep going.
+  - **Hardcore:** 1 mistake and the test ends immediately.
 - **Customizable Targets:**
   - **Time Modes:** 15s, 30s, or 45s timers.
   - **Word Count Modes:** 10, 25, or 50 words.
