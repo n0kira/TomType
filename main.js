@@ -245,6 +245,7 @@ document.addEventListener("keydown", (e) => {
     } else if (selectedMode == "normal") {
       currentLetter.classList.add("incorrect");
     } else {
+      currentLetter.classList.add("incorrect");
       endGame();
     }
     
