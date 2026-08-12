@@ -1,0 +1,103 @@
+const englishWords = [
+  "apple", "river", "mountain", "shadow", "whisper", "garden", "cloud", "ocean",
+  "breeze", "forest", "window", "blanket", "lantern", "silence", "echo",
+  "mirror", "castle", "desert", "feather", "harbor", "thunder", "spark", "meadow",
+  "riddle", "statue", "valley", "compass", "horizon", "velvet", "shelter", "winter",
+  "summer", "autumn", "spring", "planet", "galaxy", "starlight", "timber", "canyon",
+  "bridge", "village", "fountain", "island", "journey", "orchard", "crystal", "palace",
+  "silver", "golden", "copper", "iron", "stone", "marble", "granite", "blossom",
+  "willow", "maple", "cedar", "birch", "pebble", "stream", "cascade", "sunset",
+  "sunrise", "twilight", "midnight", "morning", "evening", "pattern", "texture", "rhythm",
+  "melody", "harmony", "canvas", "sketch", "legend", "beacon", "voyage", "summit",
+  "glacier", "tide", "wave", "current", "boulder", "cliff", "cavern", "tunnel",
+  "highway", "pathway", "sidewalk", "balcony", "chimney", "doorway", "kitchen", "attic",
+  "cellar", "hallway", "cabinet", "pillow", "curtain", "flame", "candle", "pioneer", 
+  "scholar", "painter", "writer", "runner", "sailor", "scout"
+];
+
+const catWords = [
+  "kitten", "purr", "whiskers", "pounce", "scratch", "meow", "kibble", "catnip",
+  "nap", "paws", "furry", "tail", "laser", "yawn", "claws", "cozy", "sleepy",
+  "cuddle", "feline", "hiss", "tabby", "calico", "groom", "stretch", "litter",
+  "perch", "sunbeam", "biscuit", "headbutt", "knead", "prowl", "panther", "shelter",
+  "rescue", "collar", "bell", "toy", "mouse", "feather", "box", "climb", "leap",
+  "chase", "swat", "fluffy", "shedding", "grooming", "sleeping", "napping", "snuggle",
+  "purring", "meowing", "hissing", "prowling", "leaping", "climbing", "swatting",
+  "scratching", "stretching", "pouncing", "snuggles", "whiskered", "playful", "curious",
+  "stealthy", "agile", "graceful", "nocturnal", "carnivore", "predator", "hunter",
+  "pawsome", "meowmix", "treats", "salmon", "tuna", "poultry", "waterbowl", "scratchpost",
+  "cattree", "litterbox", "carrier", "vet", "vaccine", "microchip", "spay", "neuter",
+  "stray", "feral", "domestic", "breed", "siamese", "persian", "ragdoll", "maine",
+  "coon", "bengal", "sphynx", "shorthair", "longhair", "fold", "bobtail", "manx",
+  "munchkin", "abyssinian", "birman", "burmese", "chartreux", "korat", "somali",
+  "singapura", "balinese", "javanese", "tonkinese", "toyger", "ocicat", "mist"
+];
+
+const techWords = [
+  "javascript", "typescript", "python", "java", "golang", "rust", "kotlin", "swift",
+  "php", "ruby", "csharp", "html", "css", "sql", "bash", "node", "bun", "deno",
+  "react", "vue", "angular", "svelte", "nextjs", "nuxt", "phaser", "dom", "element",
+  "component", "state", "props", "hook", "flexbox", "grid", "canvas", "render",
+  "styling", "asset", "viewport", "responsive", "bundle", "webpack", "vite",
+  "class", "object", "interface", "function", "method", "variable", "constant",
+  "array", "string", "boolean", "integer", "float", "pointer", "buffer", "stream",
+  "promise", "async", "await", "loop", "recursion", "syntax", "compiler", "runtime",
+  "package", "module", "library", "framework", "inherit", "instance",
+  "algorithm", "database", "query", "index", "schema", "server", "client", "request",
+  "response", "endpoint", "router", "session", "cookie", "token", "auth", "cache",
+  "memory", "thread", "process", "kernel", "binary", "system", "network", "socket",
+  "terminal", "git", "github", "commit", "branch", "merge", "pull", "push", "deploy",
+  "docker", "container", "linux", "ubuntu", "command", "script", "config", "build",
+  "sprite", "vector", "matrix", "physics", "collision", "particle", "delta", "tick",
+  "event", "listener", "payload", "handler", "debugger", "stack", "overflow"
+];
+
+const italianWords = [
+  "pizza", "pasta", "ciao", "amore", "sole", "mare", "vita", "bella",
+  "mondo", "cuore", "tempo", "notte", "giorno", "festa", "caffè", "gelato",
+  "amico", "famiglia", "casa", "strada", "piazza", "terra", "fuoco", "acqua",
+  "luce", "ombra", "vento", "fiume", "isola", "monte", "bosco", "fiore",
+  "albero", "stella", "luna", "cielo", "musica", "arte", "storia", "libro",
+  "penna", "parola", "voce", "suono", "sogno", "viaggio", "città",
+  "paese", "stazione", "treno", "volo", "lavoro", "studio", "scuola",
+  "mente", "pensiero", "forza", "coraggio", "pace", "gioia", "sorriso", "sguardo",
+  "mano", "testa", "occhio", "bocca", "porta", "finestra", "tavolo", "sedia",
+  "piatto", "pane", "vino", "formaggio", "sapore", "dolce", "caldo", "freddo",
+  "nuovo", "vecchio", "grande", "piccolo", "veloce", "lento", "chiaro", "scuro",
+  "primo", "ultimo", "sempre", "mai", "adesso", "domani", "ieri", "insieme",
+  "subito", "vicino", "lontano", "aperto", "chiuso", "pronto", "giusto", "vero",
+  "forte", "debole", "ricco", "povero", "felice", "triste", "secolo"
+];
+
+const quotes = [
+  "Be yourself; everyone else is already taken.",
+  "In the middle of difficulty lies opportunity.",
+  "It always seems impossible until it's done.",
+  "The only way to do great work is to love what you do.",
+  "Life is what happens when you're busy making other plans.",
+  "Do one thing every day that scares you.",
+  "Everything you can imagine is real.",
+  "Turn your wounds into wisdom.",
+  "Simplicity is the ultimate sophistication.",
+  "Not all those who wander are lost.",
+  "Happiness depends upon ourselves.",
+  "Whatever you are, be a good one.",
+  "What we think, we become.",
+  "The best time to plant a tree was 20 years ago. The second best time is now.",
+  "An unexamined life is not worth living.",
+  "Your time is limited, so don't waste it living someone else's life.",
+  "Believe you can and you're halfway there.",
+  "That which does not kill us makes us stronger.",
+  "The journey of a thousand miles begins with one step.",
+  "Keep your face always toward the sunshine and shadows will fall behind you.",
+  "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
+  "The only true wisdom is in knowing you know nothing.",
+  "Stay hungry, stay foolish.",
+  "Act as if what you do makes a difference. It does.",
+  "Dream big and dare to fail.",
+  "Light tomorrow with today.",
+  "It is never too late to be what you might have been.",
+  "If you tell the truth, you don't have to remember anything.",
+  "Try to be a rainbow in someone's cloud.",
+  "No pressure, no diamonds."
+];
