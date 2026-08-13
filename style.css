@@ -69,9 +69,18 @@ button {
   background-color: var(--bg-button);
   border: none;
   border-radius: 6px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: bold;
   cursor: pointer;
   color: var(--text-button);
+}
+
+.separator {
+  font-size: 40px;
+  margin: none;
+  border: none;
+  text-align: center;
+  padding-bottom: 8px;
 }
 
 .progress img {
@@ -83,10 +92,11 @@ button {
   width: 90%;
   max-width: 800px;
   background-color: var(--bg-container);
-  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 8px 24px var(--shadow-container);
+  padding: 30px;
   margin: 30px;
+  position: relative;
 }
 
 .logo {
@@ -192,10 +202,11 @@ button {
 #words-box {
   font-size: 1.6rem;
   line-height: 2.2rem;
-  letter-spacing: 2px;
+  letter-spacing: 5px;
   word-wrap: break-word;
   user-select: none;
   min-height: 120px;
+  
 }
 
 #results {
@@ -216,6 +227,16 @@ button {
 }
 
 #share-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  z-index: 10;
+}
+
+#audio-button {
   position: absolute;
   top: 15px;
   right: 15px;

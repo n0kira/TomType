@@ -19,85 +19,89 @@
     - DONE! Share stats?
     -->
 
-    <!-- 
-      Reviews: 
-      - Time and word count selectable at the same time cuz thats confusing
-      - clicking the share button to download the image the image is 1920x1080 you should make it a vertical form factor
-      - try using different fonts for the layout of the page 
-      - add a bit of spacing in the text that you have to type
-      - The typing sound is kinda annoying and plays after the test is done
-      - Tom doesnt rly get to jerry
-      - add an infinite mode without time limit
-      - a mode where you're not limited by time but by mistakes
-      - I would split up the big js file
-      -->
-    
-    <div class="stats-wrapper">
-      <div class="stats-panel container">
-        <button id="toggle-button" title="Change theme">☀️</button>
-        <button id="share-button" title="Share"><img src="img/share.png" alt="🌐" height="15px"></button>
-        <div class="top-bar">
-          <h1 class="logo">Lifetime stats</h1>
-        </div>
-        <p>Daily Streak: <span id="streak">0</span>🔥</p>
-        <p>Games Played: <span id="lifetime-games">0</span></p>
-        <p>Best WPM: <span id="best-wpm">0</span></p>
-        <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
-        <p>Best Accuracy: <span id="best-accuracy">100%</span></p>
-        <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
-      </div>
-    </div>
-    
-    <div class="container">
+  <!-- 
+    Reviews: 
+    - Time and word count selectable at the same time cuz thats confusing ???? Don't really understand this tbh
+    - clicking the share button to download the image the image is 1920x1080 you should make it a vertical form factor ????
+    - DONE! try using different fonts for the layout of the page 
+    - DONE! add a bit of spacing in the text that you have to type
+    - The typing sound is kinda annoying and plays after the test is done
+    - Tom doesnt rly get to jerry
+    - add an infinite mode without time limit
+    - a mode where you're not limited by time but by mistakes
+    - DONE! I would split up the big js file
+    -->
+
+  <div class="stats-wrapper">
+    <div class="stats-panel container">
+      <button id="toggle-button" title="Change theme">☀️</button>
+      <button id="share-button" title="Share"><img src="img/share.png" alt="🌐" height="15px"></button>
       <div class="top-bar">
-        <h1 class="logo">TomType</h1>
+        <h1 class="logo">Lifetime stats</h1>
+      </div>
+      <p>Daily Streak: <span id="streak">0</span>🔥</p>
+      <p>Games Played: <span id="lifetime-games">0</span></p>
+      <p>Best WPM: <span id="best-wpm">0</span></p>
+      <p>Avg WPM: <span id="lifetime-wpm">0</span></p>
+      <p>Best Accuracy: <span id="best-accuracy">100%</span></p>
+      <p>Avg Accuracy: <span id="lifetime-accuracy">100%</span></p>
     </div>
-    <br>
-    <header>
-      <div class="options">
-        <div class="options-container">
-          <div>
-            <button class="word-opt active-btn">English</button>
-            <button class="word-opt">Italian</button>
-            <button class="word-opt">Tech</button>
-            <button class="word-opt">Cat</button>
-            <button class="word-opt">Quotes</button>
-          </div>
-          
-          <span>|</span>
-          
-          <div>
-            <button class="mode-opt active-btn">Normal</button>
-            <button class="mode-opt">Hardcore</button>
-          </div>
+  </div>
+  
+  <div class="container">
+    <div class="top-bar">
+      <h1 class="logo">TomType</h1>
+  </div>
+  <br>
+  <header>
+    <div class="options">
+      <div class="options-container">
+        <div>
+          <button class="word-opt active-btn">English</button>
+          <button class="word-opt">Italian</button>
+          <button class="word-opt">Tech</button>
+          <button class="word-opt">Cat</button>
+          <button class="word-opt">Quotes</button>
         </div>
         
+        <span class="separator">|</span>
         
-        <div class="options-container"> 
-          <div>
-            <button class="time-opt" data-time="15">15s</button>
-            <button class="time-opt active-btn" data-time="30">30s</button>
-            <button class="time-opt" data-time="45">45s</button>
-          </div>
-          
-          <span>|</span>
-          
-          <div>
-            <button class="amount-opt" data-amount="10">10 words</button>
-            <button class="amount-opt active-btn" data-amount="25">25 words</button>
-            <button class="amount-opt" data-amount="50">50 words</button>
-          </div>
+        <div>
+          <button class="mode-opt active-btn">Normal</button>
+          <button class="mode-opt">Hardcore</button>
         </div>
       </div>
-      <div class="stats">
-        <div id="timer">30s</div>
-        <div id="wpm">0 WPM</div>
-        <div id="accuracy">100%</div>
+      
+      
+      <div class="options-container"> 
+        <div>
+          <button class="time-opt" data-time="15">15s</button>
+          <button class="time-opt active-btn" data-time="30">30s</button>
+          <button class="time-opt" data-time="45">45s</button>
+        </div>
+        
+        <span class="separator">|</span>
+        
+        <div>
+          <button class="amount-opt" data-amount="10">10 words</button>
+          <button class="amount-opt active-btn" data-amount="25">25 words</button>
+          <button class="amount-opt" data-amount="50">50 words</button>
+        </div>
       </div>
-    </header>
-    
-    
-    <div id="words-box"></div>
+    </div>
+
+    <div class="stats">
+      <div id="timer">30s</div>
+      <div id="wpm">0 WPM</div>
+      <div id="accuracy">100%</div>
+    </div>
+
+    <button id="audio-button"><img id="audio-icon" src="img/sound-on.png" alt="" height="15px"></button>
+
+  </header>
+  
+  
+  <div id="words-box"></div>
     
     <div class="progress">
       <div id="cat-sprite"><img src="img/cat.png" alt=""></div>
@@ -122,6 +126,7 @@
   <script src="data.js"></script>
   <script src="streak.js"></script>
   <script src="theme.js"></script>
+  <script src="sound.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

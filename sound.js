@@ -6,7 +6,8 @@ uiAudio.preload = "autio";
 
 document.querySelectorAll(`button`).forEach((btn) => {
   btn.addEventListener("click", () => {
-      const soundInstance = uiAudio.cloneNode();
-      soundInstance.play().catch(err => console.log("Audio play blocked:", err));
+    if (isMuted)  return;
+    const soundInstance = uiAudio.cloneNode();
+    soundInstance.play().catch(err => console.log("Audio play blocked:", err));
   });
 });

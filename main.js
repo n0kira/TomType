@@ -12,6 +12,8 @@ const resultAccuracy = document.getElementById('result-accuracy');
 const lifetimeAccuracy = document.getElementById('lifetime-accuracy');
 const bestAccuracyElem = document.getElementById('best-accuracy');
 const bestWpmElem = document.getElementById('best-wpm');
+const audioButton = document.getElementById('audio-button');
+const audioIcon = document.getElementById('audio-icon');
 
 const shareButton = document.getElementById('share-button');
 const statsPanel = document.querySelector('.stats-panel');
@@ -28,6 +30,7 @@ let calculator = null;
 let startTime = null;
 let hasStarted = false;
 let isOver = false;
+let isMuted = false;
 let selectedMode = "normal";
 
 let totalWpm = Number(localStorage.getItem('totalWpm')) || 0;
@@ -37,6 +40,16 @@ let bestWPM = Number(localStorage.getItem('bestWPM')) || 0;
 let bestAccuracy = Number(localStorage.getItem('bestAccuracy')) || 0;
 
 let words = englishWords;
+
+audioButton.addEventListener("click", (e) => {
+  if (isMuted) {
+    audioIcon.src = "img/sound-on.png";
+    isMuted = false;
+  } else {
+    audioIcon.src = "img/sound-off.png";
+    isMuted = true;
+  }
+});
 
 shareButton.addEventListener("click", (e) => {
   htmlToImage
@@ -111,8 +124,10 @@ window.addEventListener("keydown", (e) => {
 })
 
 document.addEventListener("keydown", (e) => { 
-  const soundInstance = typeAudio.cloneNode();
-  soundInstance.play().catch(err => console.log("Audio play blocked:", err));
+  if (!isMuted) {
+    const soundInstance = typeAudio.cloneNode();
+    soundInstance.play().catch(err => console.log("Audio play blocked:", err));
+  }
   
   if ((e.key.length > 1 && e.key !== "Backspace") || isOver) return;
   
