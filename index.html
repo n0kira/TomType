@@ -21,14 +21,14 @@
 
   <!-- 
     Reviews: 
-    - Time and word count selectable at the same time cuz thats confusing ???? Don't really understand this tbh
-    - clicking the share button to download the image the image is 1920x1080 you should make it a vertical form factor ????
+    - DONE! Time and word count selectable at the same time cuz thats confusing 
+    - (???) clicking the share button to download the image the image is 1920x1080 you should make it a vertical form factor
     - DONE! try using different fonts for the layout of the page 
     - DONE! add a bit of spacing in the text that you have to type
-    - The typing sound is kinda annoying and plays after the test is done
-    - Tom doesnt rly get to jerry
-    - add an infinite mode without time limit
-    - a mode where you're not limited by time but by mistakes
+    - DONE! The typing sound is kinda annoying and plays after the test is done
+    - DONE! (?) Tom doesnt rly get to jerry
+    - (Hm no) add an infinite mode without time limit
+    - DONE! a mode where you're not limited by time but by mistakes
     - DONE! I would split up the big js file
     -->
 
@@ -69,6 +69,7 @@
         <div>
           <button class="mode-opt active-btn">Normal</button>
           <button class="mode-opt">Hardcore</button>
+          <button class="mode-opt">Survival</button>
         </div>
       </div>
       
@@ -76,7 +77,7 @@
       <div class="options-container"> 
         <div>
           <button class="time-opt" data-time="15">15s</button>
-          <button class="time-opt active-btn" data-time="30">30s</button>
+          <button class="time-opt" data-time="30">30s</button>
           <button class="time-opt" data-time="45">45s</button>
         </div>
         
@@ -91,7 +92,7 @@
     </div>
 
     <div class="stats">
-      <div id="timer">30s</div>
+      <div id="timer">-</div>
       <div id="wpm">0 WPM</div>
       <div id="accuracy">100%</div>
     </div>

@@ -23,7 +23,6 @@ function getDaysPassed(lastActive, today) {
 
 function checkStreak() {
   if (lastActive) {
-    console.log("checking streak");
     const today = getDate(new Date());
     const daysPassed = getDaysPassed(lastActive, today);
 
@@ -35,21 +34,17 @@ function checkStreak() {
 }
 
 function updateStreak() {
-  console.log("updating streak");
   const today = getDate(new Date());
 
   if (!lastActive) {
     currentStreak = 1;
-    console.log("boop");
   } else {
     const daysPassed = getDaysPassed(lastActive, today);
 
     if (daysPassed == 1) {
       currentStreak++;
-      console.log("updated");
     } else if (daysPassed > 1) {
       currentStreak = 1;
-      console.log("reset");
     }
   }
 

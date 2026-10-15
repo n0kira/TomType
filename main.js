@@ -32,6 +32,8 @@ let hasStarted = false;
 let isOver = false;
 let isMuted = false;
 let selectedMode = "normal";
+let maxErrors = 5;
+let currentErrors = 0;
 
 let totalWpm = Number(localStorage.getItem('totalWpm')) || 0;
 let totalPlays = Number(localStorage.getItem('totalPlays')) || 0;
@@ -75,28 +77,85 @@ options.addEventListener("click", (e) => {
   if (e.target.classList.contains('word-opt')) {
     setActiveButton(e.target);
     const button = e.target.innerText;
+
+    const timeOptButtons = document.querySelectorAll(`.time-opt`);
+    const amountOptButtons = document.querySelectorAll(`.amount-opt`);
+
     if (button == "Quotes") {
       words = quotes;
+
+      selectedTime = null;
+      selectedAmount = null;
+      timerDisplay.innerText = "-";
+
+      timeOptButtons.forEach(button => {
+        button.disabled = true;
+        button.classList.remove('active-btn');
+      });
+
+      amountOptButtons.forEach(button => {
+        button.classList.remove('active-btn');
+        button.disabled = true;
+      });
+      
     } else {
       words = eval(button.toLowerCase() + "Words");
+      
+      timeOptButtons.forEach(button => {
+        button.disabled = false;
+      });
+  
+      amountOptButtons.forEach(button => {
+        button.disabled = false;
+      });
+
+      const activeTimeButton = document.querySelector(`.time-opt.active-btn`);
+      const activeAmountButton = document.querySelector(`.amount-opt.active-btn`);
+      if (!activeTimeButton && !activeAmountButton) {
+        const defaultTimeButton = document.querySelector(`.time-opt[data-time="30"]`);
+        if (defaultTimeButton) {
+          defaultTimeButton.classList.add('active-btn')
+        }
+      }else if (activeTimeButton) {
+        selectedTime = parseInt(activeTimeButton.getAttribute('data-time'), 10);
+        selectedAmount = null;
+        timeLeft = selectedTime;
+        timerDisplay.innerText = selectedTime + 's';
+      } else if (activeAmountButton) {
+          selectedAmount = parseInt(activeAmountButton.getAttribute('data-amount'), 10);
+          selectedTime = null;
+          timerDisplay.innerText = '-';
+      }
     }
+
     reset();
   }
 
   if (e.target.classList.contains('time-opt')) {
+    if (e.target.disabled) return;
     setActiveButton(e.target);
+    document.querySelectorAll(`.amount-opt`).forEach(button => {
+      button.classList.remove('active-btn');
+    });
     const time = parseInt(e.target.getAttribute('data-time'), 10);
     if (!isNaN(time)) {
       selectedTime = time;
+      selectedAmount = null;
       reset();
     }
   }
 
   if (e.target.classList.contains('amount-opt')) {
+    if (e.target.disabled) return;
     setActiveButton(e.target);
+    document.querySelectorAll(`.time-opt`).forEach(button => {
+      button.classList.remove('active-btn');
+    });
     const amount = parseInt(e.target.getAttribute('data-amount'), 10);
     if (!isNaN(amount)) {
       selectedAmount = amount;
+      selectedTime = null;
+      timerDisplay.innerText = "-";
       reset();
     }
   }
@@ -138,6 +197,7 @@ document.addEventListener("keydown", (e) => {
   
   
   if (!hasStarted) {
+    if (isOver) return;
     start();
     hasStarted = true;
     startTime = Date.now();
@@ -164,9 +224,16 @@ document.addEventListener("keydown", (e) => {
       correctCount++;
     } else if (selectedMode == "normal") {
       currentLetter.classList.add("incorrect");
-    } else {
+    } else if (selectedMode == "hardcore") {
       currentLetter.classList.add("incorrect");
       endGame();
+    } else if (selectedMode == "survival") {
+      currentLetter.classList.add("incorrect");
+      if (currentErrors < maxErrors - 1) {
+        currentErrors++;
+      } else {
+        endGame();
+      }
     }
     
     const accuracy = Math.round((correctCount / totalStrokes) * 100);
@@ -177,12 +244,14 @@ document.addEventListener("keydown", (e) => {
     
     if (currentIndex < letters.length) {
       letters[currentIndex].classList.add("active");
-    } else if (letters[currentIndex - 1].classList.contains("correct")) {
+    } else if (selectedTime != null) {
+      render();
+    } else {
       endGame();
     }
     
-    const progress = (currentIndex / letters.length) * 80;
-    catSprite.style.left = `${Math.min(progress, 80)}%`;
+    const progress = (currentIndex / letters.length) * 83;
+    catSprite.style.left = `${Math.min(progress, 83)}%`;
   } 
 });
 
@@ -240,15 +309,19 @@ function saveStats(wpm, accuracy) {
 }
 
 function start() {
-  timer = setInterval(() => {
-    timeLeft--;
-    timerDisplay.innerText = timeLeft + "s";
-    
-    if (timeLeft <= 0 || isOver) {
-      clearInterval(timer);
-      endGame();
-    }
-  }, 1000);
+  if (selectedTime != null) {
+    timer = setInterval(() => {
+      timeLeft--;
+      timerDisplay.innerText = timeLeft + "s";
+      
+      if (timeLeft <= 0 || isOver) {
+        clearInterval(timer);
+        endGame();
+      }
+    }, 1000);
+  } else {
+    timerDisplay.innerText = '-';
+  }
   
   calculator = setInterval(calculateWPM, 200);
 }
@@ -258,7 +331,7 @@ function calculateWPM() {
   const wpm = Math.round((correctCount / 5) / (elapsedSeconds / 60));
   currentWpm.innerText = wpm + " WPM";
   
-  if (timeLeft <= 0 || isOver) {
+  if (selectedTime != null && timeLeft <= 0 || isOver) {
     clearInterval(calculator);
     return;
   }
@@ -291,8 +364,16 @@ function reset() {
   currentIndex = 0;
   correctCount = 0;
   totalStrokes = 0;
-  timeLeft = selectedTime;
-  timerDisplay.innerText = selectedTime + "s";
+  currentErrors = 0;
+  
+  if (selectedTime != null) {
+    timeLeft = selectedTime;
+    timerDisplay.innerText = selectedTime + "s";
+  } else {
+    timerDisplay.innerText = '-';
+  }
+
+
   currentWpm.innerHTML = "0 WPM";
   currentAccuracy.innerText = "100%"
   catSprite.style.left = "10px";
@@ -305,6 +386,7 @@ function reset() {
 
 function render() {
   wordsBox.innerHTML = '';
+  currentIndex = 0;
   
   let selectedWords = [];
   if (words == quotes) {
@@ -312,7 +394,8 @@ function render() {
     const quoteString = quotes[selectedQuote];
     selectedWords = quoteString.split(" ");
   } else {
-    for (let i = 0; i < selectedAmount; i++) {
+    const countToRender = selectedAmount != null ? selectedAmount : 25;
+    for (let i = 0; i < countToRender; i++) {
       const index = Math.floor(Math.random() * words.length);
       selectedWords.push(words[index]);
     }
@@ -324,7 +407,9 @@ function render() {
     const span = document.createElement("span");
     span.innerText = char;
     span.classList.add("letter");
-    if (index == 0) {
+    if (index == 0 && !hasStarted) {
+      span.classList.add("active");
+    } else if (index == 0 && hasStarted) {
       span.classList.add("active");
     }
     wordsBox.appendChild(span);
